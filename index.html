@@ -1,1 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Note Generator</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.form {
+  width: 50%;
+  overflow-y: auto;
+  padding: 20px;
+  background: white;
+}
+
+.preview {
+  width: 50%;
+  padding: 20px;
+  background: #fafafa;
+  border-left: 2px solid #ddd;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+textarea, input[type=text] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.output {
+  white-space: pre-wrap;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 15px;
+  min-height: 300px;
+}
+
+button {
+  padding: 10px 16px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="form">
+
+<h2>Note Generator</h2>
+
+<div class="card">
+<label>Issue Reported</label>
+<textarea id="issue"></textarea>
+
+<label>Diagnosis</label>
+<textarea id="diagnosis"></textarea>
+
+<label>Repair or Exchange</label>
+<input type="radio" name="repair" value="Repair"> Repair
+<input type="radio" name="repair" value="Exchange"> Exchange
+
+<br><br>
+
+<label>Advised Customer</label>
+<textarea id="advised"></textarea>
+
+<label>Warranty End Date</label>
+<input type="text" id="warranty">
+
+<label>Return Tracking</label>
+<input type="text" id="tracking">
+
+<label>Optional Notes</label>
+<textarea id="notes"></textarea>
+</div>
+
+<button onclick="copyNotes()">Copy Notes</button>
+<button onclick="clearForm()">Clear</button>
+
+</div>
+
+<div class="preview">
+<h3>Generated Notes</h3>
+<div class="output" id="output"></div>
+</div>
+
+</div>
+
+<script>
+function getRadio(name){
+  const r = document.getElementsByName(name);
+  for (let i of r) if (i.checked) return i.value;
+  return "";
+}
+
+function updatePreview(){
+  const text =
+`| What was the issue reported: ${issue.value}
+| What was found with unit: ${diagnosis.value}
+| Repair or Exchange: ${getRadio('repair')}
+| Advised customer: ${advised.value}
+| Warranty end date: ${warranty.value}
+| Return tracking number: ${tracking.value}
+${notes.value ? "| Notes: " + notes.value : ""}`;
+
+  output.textContent = text.trim();
+}
+
+document.querySelectorAll("textarea,input").forEach(el=>{
+  el.addEventListener("input", updatePreview);
+  el.addEventListener("change", updatePreview);
+});
+
+function copyNotes(){
+  navigator.clipboard.writeText(output.textContent);
+  alert("Copied!");
+}
+
+function clearForm(){
+  document.querySelectorAll("textarea,input[type=text]").forEach(e=>e.value="");
+  document.querySelectorAll("input[type=radio]").forEach(e=>e.checked=false);
+  updatePreview();
+}
+</script>
+
+</body>
+</html>
 
