@@ -17,7 +17,6 @@ textarea{min-height:80px}
 .actions{display:flex;gap:10px;margin-top:12px}
 button{padding:10px 14px;border-radius:10px;border:0;background:#111;color:#fff;cursor:pointer}
 button.secondary{background:#eee;color:#111;border:1px solid #ccc}
-.refImg{width:100%;border-radius:10px;border:1px solid #ddd}
 </style>
 </head>
 
@@ -49,7 +48,6 @@ button.secondary{background:#eee;color:#111;border:1px solid #ccc}
 <label>Advise customer:</label>
 <textarea id="advise"></textarea>
 
-
 <label>Return tracking number:</label>
 <select id="trackingMode">
 <option value="">Select</option>
@@ -74,11 +72,6 @@ button.secondary{background:#eee;color:#111;border:1px solid #ccc}
 <div class="output" id="output"></div>
 </div>
 
-<div class="card">
-<h3>NWAD / Loaner Code Reference</h3>
-<img class="refImg" src="nwad-codes.png">
-</div>
-
 </div>
 
 <script>
@@ -90,22 +83,16 @@ const repairExchange=$("repairExchange");
 const exchangeWhyWrap=$("exchangeWhyWrap");
 const exchangeWhy=$("exchangeWhy");
 const advise=$("advise");
-const loaner=$("loaner");
-const loanerOtherWrap=$("loanerOtherWrap");
-const loanerOther=$("loanerOther");
 const trackingMode=$("trackingMode");
 const trackingWrap=$("trackingWrap");
 const tracking=$("tracking");
 const output=$("output");
 
-// Conditional logic
 function updateConditional(){
 exchangeWhyWrap.classList.toggle("hidden",repairExchange.value!=="Exchange");
 trackingWrap.classList.toggle("hidden",trackingMode.value!=="Enter Tracking");
-loanerOtherWrap.classList.toggle("hidden",loaner.value!=="nwad-other");
 }
 
-// Build notes
 function buildNotes(){
 const lines=[];
 lines.push(`| What was the issue reported: ${issue.value}`);
@@ -118,12 +105,6 @@ lines.push(`| If exchange, why was it exchanged?: ${exchangeWhy.value}`);
 
 lines.push(`| Advise customer: ${advise.value}`);
 
-if(loaner.value==="nwad-other"){
-lines.push(`| Loaner code: nwad-other (${loanerOther.value})`);
-}else{
-lines.push(`| Loaner code: ${loaner.value}`);
-}
-
 if(trackingMode.value==="N/A Walk-In"){
 lines.push(`| Return tracking number: N/A Walk-In`);
 }else if(trackingMode.value==="Enter Tracking"){
@@ -133,13 +114,11 @@ lines.push(`| Return tracking number: ${tracking.value}`);
 output.textContent=lines.join("\n");
 }
 
-// Live updates
 document.querySelectorAll("textarea,input,select").forEach(el=>{
 el.addEventListener("input",()=>{updateConditional();buildNotes();});
 el.addEventListener("change",()=>{updateConditional();buildNotes();});
 });
 
-// Copy
 $("copyBtn").onclick=async()=>{
 await navigator.clipboard.writeText(output.textContent);
 const toast=document.createElement("div");
@@ -155,7 +134,6 @@ document.body.appendChild(toast);
 setTimeout(()=>toast.remove(),1200);
 };
 
-// Clear
 $("clearBtn").onclick=()=>{
 document.querySelectorAll("textarea,input").forEach(e=>e.value="");
 document.querySelectorAll("select").forEach(e=>e.selectedIndex=0);
